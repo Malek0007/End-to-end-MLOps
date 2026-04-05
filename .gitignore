@@ -1,0 +1,14 @@
+# Data
+data/raw/
+data/processed/
+
+# Models
+models/
+
+# Reports (optional)
+reports/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
