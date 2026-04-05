@@ -16,3 +16,19 @@ stages:
       hash: md5
       md5: 606c144e5d8de2568c100dce628e0993
       size: 1603949
+  validate:
+    cmd: python src/validate.py
+    deps:
+    - path: data/processed/us_accident_clean.csv
+      hash: md5
+      md5: 606c144e5d8de2568c100dce628e0993
+      size: 1603949
+    - path: src/validate.py
+      hash: md5
+      md5: 851e4b1f91122c736b0ce1918f499182
+      size: 807
+    outs:
+    - path: reports/validation.txt
+      hash: md5
+      md5: c8f0e4ac0468ea426df96a203e7da335
+      size: 162

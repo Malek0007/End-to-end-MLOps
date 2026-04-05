@@ -6,3 +6,10 @@ stages:
     - src/process_data.py
     outs:
     - data/processed/us_accident_clean.csv
+  validate:
+    cmd: python src/validate.py
+    deps:
+    - data/processed/us_accident_clean.csv
+    - src/validate.py
+    outs:
+    - reports/validation.txt
