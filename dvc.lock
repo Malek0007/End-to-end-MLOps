@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  process_data:
+    cmd: python src/process_data.py
+    deps:
+    - path: data/raw/us_accident.csv
+      hash: md5
+      md5: 1f89c7188e09a16892ecc1be9434c58f
+      size: 11092460
+    - path: src/process_data.py
+      hash: md5
+      md5: 81a4e9b9563376f5907bfad3d24bdc62
+      size: 973
+    outs:
+    - path: data/processed/us_accident_clean.csv
+      hash: md5
+      md5: 606c144e5d8de2568c100dce628e0993
+      size: 1603949
