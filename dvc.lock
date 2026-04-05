@@ -32,3 +32,19 @@ stages:
       hash: md5
       md5: c8f0e4ac0468ea426df96a203e7da335
       size: 162
+  train_model:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed/us_accident_clean.csv
+      hash: md5
+      md5: 606c144e5d8de2568c100dce628e0993
+      size: 1603949
+    - path: src/train.py
+      hash: md5
+      md5: 4123b13c867988c9ec083fdb3cc56ceb
+      size: 1636
+    outs:
+    - path: models/us_accident_model.pkl
+      hash: md5
+      md5: 2dc4ed4f7195fa62108eb1e98ea700a1
+      size: 58166402

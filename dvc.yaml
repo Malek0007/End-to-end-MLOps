@@ -13,3 +13,10 @@ stages:
     - src/validate.py
     outs:
     - reports/validation.txt
+  train_model:
+    cmd: python src/train.py
+    deps:
+    - data/processed/us_accident_clean.csv
+    - src/train.py
+    outs:
+    - models/us_accident_model.pkl
