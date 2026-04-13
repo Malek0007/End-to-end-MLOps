@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: us-accident-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: us-accident-api
+  template:
+    metadata:
+      labels:
+        app: us-accident-api
+    spec:
+      containers:
+        - name: us-accident-api
+          image: us-accident-api:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000

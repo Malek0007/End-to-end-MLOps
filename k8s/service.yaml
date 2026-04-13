@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: us-accident-api-service
+spec:
+  type: NodePort
+  selector:
+    app: us-accident-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30081
