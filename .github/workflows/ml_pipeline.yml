@@ -1,4 +1,4 @@
-name: ML CD Pipeline for Champion Model API
+name: US-accident Pipeline for Champion Model API
 
 on:
   push:
