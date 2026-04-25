@@ -1,6 +1,0 @@
-artifact_location: file:///Users/malekgarrach/End-to-end-MLOps/mlruns/549181976349519423
-creation_time: 1776375098469
-experiment_id: '549181976349519423'
-last_update_time: 1776375098469
-lifecycle_stage: active
-name: us_accident_model_comparison
