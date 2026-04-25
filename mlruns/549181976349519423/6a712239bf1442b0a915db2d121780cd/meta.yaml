@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/malekgarrach/End-to-end-MLOps/mlruns/549181976349519423/6a712239bf1442b0a915db2d121780cd/artifacts
+end_time: 1776375105025
+entry_point_name: ''
+experiment_id: '549181976349519423'
+lifecycle_stage: active
+run_id: 6a712239bf1442b0a915db2d121780cd
+run_name: decision_tree
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1776375102567
+status: 3
+tags: []
+user_id: malekgarrach

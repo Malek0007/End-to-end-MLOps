@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/malekgarrach/End-to-end-MLOps/mlruns/549181976349519423/8f04bd739aaa4070a6cd0fd3ba676a6b/artifacts
+end_time: 1776375102566
+entry_point_name: ''
+experiment_id: '549181976349519423'
+lifecycle_stage: active
+run_id: 8f04bd739aaa4070a6cd0fd3ba676a6b
+run_name: logistic_regression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1776375098832
+status: 3
+tags: []
+user_id: malekgarrach

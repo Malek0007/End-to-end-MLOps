@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Accident Severity Predictor</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      margin-top: 8px;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 680px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #94a3b8;
+    }
+
+    label .unit {
+      font-size: 0.72rem;
+      color: #64748b;
+      margin-left: 4px;
+    }
+
+    input[type="number"] {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #e2e8f0;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    input[type="number"]:focus { border-color: #38bdf8; }
+    input[type="number"]::placeholder { color: #475569; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #1d4ed8;
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+
+    button:hover { background: #1e40af; }
+    button:active { transform: scale(0.98); }
+    button:disabled { background: #374151; color: #d1d5db; cursor: not-allowed; }
+
+    .result {
+      margin-top: 24px;
+      border-radius: 12px;
+      padding: 24px;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .result.dangerous {
+      display: flex;
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.5);
+    }
+
+    .result.safe {
+      display: flex;
+      background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.5);
+    }
+
+    .result-icon { font-size: 2.4rem; flex-shrink: 0; }
+
+    .result-text h2 { font-size: 1.25rem; font-weight: 700; }
+    .result.dangerous .result-text h2 { color: #fca5a5; }
+    .result.safe     .result-text h2 { color: #86efac; }
+
+    .result-text p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .error-msg {
+      margin-top: 16px;
+      background: #3b0f0f;
+      border: 1px solid #7f1d1d;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #fca5a5;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .divider { border: none; border-top: 1px solid #334155; margin: 24px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>US Accident Severity Predictor</h1>
+    <p>Enter road and weather conditions to assess accident danger level</p>
+  </header>
+
+  <div class="card">
+    <p class="section-title" aria-hidden="true">Location</p>
+    <div class="grid">
+      <div class="field">
+        <label for="lat">Latitude <span class="unit">(decimal degrees)</span></label>
+        <input type="number" id="lat" step="any" placeholder="e.g. 36.8529" aria-label="Latitude in decimal degrees" />
+      </div>
+      <div class="field">
+        <label for="lng">Longitude <span class="unit">(decimal degrees)</span></label>
+        <input type="number" id="lng" step="any" placeholder="e.g. -76.2859" aria-label="Longitude in decimal degrees" />
+      </div>
+    </div>
+
+    <p class="section-title" aria-hidden="true">Road Conditions</p>
+    <div class="grid">
+      <div class="field">
+        <label for="distance">Accident Distance <span class="unit">(miles)</span></label>
+        <input type="number" id="distance" step="any" min="0" placeholder="e.g. 0.5" aria-label="Accident distance in miles" />
+      </div>
+      <div class="field">
+        <label for="visibility">Visibility <span class="unit">(miles)</span></label>
+        <input type="number" id="visibility" step="any" min="0" placeholder="e.g. 10.0" aria-label="Visibility in miles" />
+      </div>
+    </div>
+
+    <p class="section-title" aria-hidden="true">Weather</p>
+    <div class="grid">
+      <div class="field">
+        <label for="temperature">Temperature <span class="unit">(°F)</span></label>
+        <input type="number" id="temperature" step="any" placeholder="e.g. 72.0" aria-label="Temperature in Fahrenheit" />
+      </div>
+      <div class="field">
+        <label for="humidity">Humidity <span class="unit">(%)</span></label>
+        <input type="number" id="humidity" step="any" min="0" max="100" placeholder="e.g. 65" aria-label="Humidity percentage" />
+      </div>
+      <div class="field">
+        <label for="pressure">Pressure <span class="unit">(inHg)</span></label>
+        <input type="number" id="pressure" step="any" placeholder="e.g. 29.9" aria-label="Atmospheric pressure in inches of mercury" />
+      </div>
+      <div class="field">
+        <label for="windspeed">Wind Speed <span class="unit">(mph)</span></label>
+        <input type="number" id="windspeed" step="any" min="0" placeholder="e.g. 8.0" aria-label="Wind speed in miles per hour" />
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <button id="predictBtn" onclick="predict()">Predict Danger Level</button>
+
+    <div class="error-msg" id="errorMsg" role="alert"></div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="result-icon" id="resultIcon" aria-hidden="true"></div>
+      <div class="result-text">
+        <h2 id="resultTitle">&#8203;</h2>
+        <p id="resultDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "";
+
+    const fields = [
+      { id: "lat",         label: "Latitude" },
+      { id: "lng",         label: "Longitude" },
+      { id: "distance",    label: "Distance" },
+      { id: "temperature", label: "Temperature" },
+      { id: "humidity",    label: "Humidity" },
+      { id: "pressure",    label: "Pressure" },
+      { id: "visibility",  label: "Visibility" },
+      { id: "windspeed",   label: "Wind Speed" },
+    ];
+
+    function showError(msg) {
+      const el = document.getElementById("errorMsg");
+      el.textContent = msg;
+      el.style.display = "block";
+    }
+
+    function hideError() {
+      document.getElementById("errorMsg").style.display = "none";
+    }
+
+    function setResult(isDangerous) {
+      const result = document.getElementById("result");
+      const icon   = document.getElementById("resultIcon");
+      const title  = document.getElementById("resultTitle");
+      const desc   = document.getElementById("resultDesc");
+
+      result.className = "result " + (isDangerous ? "dangerous" : "safe");
+      icon.textContent  = isDangerous ? "⚠️" : "✅";
+      title.textContent = isDangerous ? "Dangerous Conditions" : "Safe Conditions";
+      desc.textContent  = isDangerous
+        ? "Severity > 2 — high risk of a serious accident under these conditions."
+        : "Severity ≤ 2 — conditions are within a manageable risk range.";
+    }
+
+    async function predict() {
+      hideError();
+      document.getElementById("result").className = "result";
+
+      const features = [];
+      for (const { id, label } of fields) {
+        const val = document.getElementById(id).value.trim();
+        if (val === "") { showError(`Please fill in "${label}".`); return; }
+        const num = Number.parseFloat(val);
+        if (Number.isNaN(num)) { showError(`"${label}" must be a valid number.`); return; }
+        features.push(num);
+      }
+
+      const btn = document.getElementById("predictBtn");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Analyzing…';
+
+      try {
+        const res = await fetch(`${API_URL}/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ features }),
+        });
+
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+        const data = await res.json();
+
+        if (data.error) throw new Error(data.error);
+        setResult(data.prediction === 1);
+      } catch (err) {
+        showError(`Prediction failed: ${err.message}. Make sure the API is running.`);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Predict Danger Level";
+      }
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") predict();
+    });
+  </script>
+</body>
+</html>

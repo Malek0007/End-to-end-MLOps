@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/malekgarrach/End-to-end-MLOps/mlruns/549181976349519423/83e9108edbad4f76af84731647709cbc/artifacts
+end_time: 1776375110701
+entry_point_name: ''
+experiment_id: '549181976349519423'
+lifecycle_stage: active
+run_id: 83e9108edbad4f76af84731647709cbc
+run_name: random_forest
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1776375105026
+status: 3
+tags: []
+user_id: malekgarrach
