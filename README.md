@@ -4,6 +4,9 @@ A complete MLOps project for training and serving a US Accidents prediction mode
 Includes a DVC pipeline (process → validate → train), a FastAPI backend, a web
 frontend, Docker Compose, Kubernetes manifests, and a GitHub Actions workflow.
 
+<img width="545" height="210" alt="image" src="https://github.com/user-attachments/assets/8bc7f659-59f0-4457-b1f5-8f4541525735" />
+
+
 ## Stack
 
 - **Backend**: FastAPI + Uvicorn
